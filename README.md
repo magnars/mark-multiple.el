@@ -13,6 +13,8 @@ Done
 * A general library for managing master and mirrors
 * `mark-more-like-this` which selects next/previous substring in the buffer that
   matches the current region.
+* `inline-string-rectangle` which works like `string-rectangle` but lets you
+  write inline - making it less error prone.
 
 Installation
 ------------
@@ -30,8 +32,6 @@ I'm sure you'll come up with your own keybindings.
 
 Ideas for more
 --------------
-* `inline-rectangle-text` which works like `rectangle-text` but lets you
-  write inline - making it less error prone.
 * `rename-html-tag` which updates the matching tag while typing.
 * `js-rename-local-var` which renames the variable at point in the local file.
 

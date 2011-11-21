@@ -100,6 +100,12 @@ Point must be within the region defined by START and END."
 
 ;; Define some utility functions for users of mark-multiple:
 
+(defun mm/create-master-or-mirror (start end)
+  "Create master if there is none, otherwise add mirror."
+  (if (null mm/master)
+      (mm/create-master start end)
+    (mm/add-mirror start end)))
+
 (defun mm/first-overlay-start ()
   "Find first buffer position covered by master and mirrors"
   (let ((start (mm/master-start)))

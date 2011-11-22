@@ -40,6 +40,8 @@
 (defun mark-next-like-this (start end)
   "Find and mark the next part of the buffer matching the currently active region"
   (interactive "r")
+  (if (not (region-active-p))
+      (error "Mark a region to match first."))
   (let ((length (- end start)))
     (if (null mm/master)
         (mm/create-master start end))
@@ -52,6 +54,8 @@
 (defun mark-previous-like-this (start end)
   "Find and mark the previous part of the buffer matching the currently active region"
   (interactive "r")
+  (if (not (region-active-p))
+      (error "Mark a region to match first."))
   (let ((length (- end start)))
     (if (null mm/master)
         (mm/create-master start end))

@@ -34,6 +34,7 @@
 ;;   matches the current region.
 ;; * `inline-string-rectangle` which works like `string-rectangle` but lets you
 ;;   write inline - making it less error prone.
+;; * `rename-sgml-tag` which updates the matching tag while typing.
 ;;
 ;; Installation
 ;; ------------
@@ -46,15 +47,17 @@
 ;;     (global-set-key (kbd "C-x r t") 'inline-string-rectangle)
 ;;
 ;;     (require 'mark-more-like-this)
-;;     (global-set-key (kbd "") 'mark-previous-like-this)
-;;     (global-set-key (kbd "") 'mark-next-like-this)
-;;     (global-set-key (kbd "") 'mark-more-like-this) ; like the other two, but takes an argument (negative is previous)
+;;     (global-set-key (kbd "C-<") 'mark-previous-like-this)
+;;     (global-set-key (kbd "C->") 'mark-next-like-this)
+;;     (global-set-key (kbd "C-M-m") 'mark-more-like-this) ; like the other two, but takes an argument (negative is previous)
 ;;
-;; I'm sure you'll come up with your own keybindings.
+;;     (require 'rename-sgml-tag)
+;;     (define-key sgml-mode-map (kbd "C-c C-r") 'rename-sgml-tag)
+;;
+;; Feel free to come up with your own keybindings.
 ;;
 ;; Ideas for more
 ;; --------------
-;; * `rename-html-tag` which updates the matching tag while typing.
 ;; * `js-rename-local-var` which renames the variable at point in the local file.
 ;;
 ;; Bugs and gotchas

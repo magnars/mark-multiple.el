@@ -47,6 +47,9 @@ Bugs and gotchas
   overlapping mirrors. That's only a problem for people who want to write their
   own functions using `mm/create-master` and `mm/add-mirror`.
 
+* Seems like there is some conflict with undo-tree.el, which sometimes clobbers
+  the undo history. I might be doing something particularly stupid. Looking into it.
+
 A wild idea
 -----------
 

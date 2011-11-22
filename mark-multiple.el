@@ -1,5 +1,87 @@
-; mark-multiple.el
-; A library that sorta lets you mark several regions at once
+;;; mark-multiple.el --- A library that sorta lets you mark several regions at once
+
+;; Copyright (C) 2011 Magnar Sveen
+
+;; Author: Magnar Sveen <magnars@gmail.com>
+;; Keywords: marking library
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; An emacs extension that sorta lets you mark several regions at once.
+;;
+;; More precisely, it allows for one master region, with several mirror
+;; regions. The mirrors are updated inline while you type. This allows for some
+;; awesome functionality. Or at least, some more visually pleasing insert and
+;; replace operations.
+;;
+;; Done
+;; ----
+;; * A general library for managing master and mirrors
+;; * `mark-more-like-this` which selects next/previous substring in the buffer that
+;;   matches the current region.
+;; * `inline-string-rectangle` which works like `string-rectangle` but lets you
+;;   write inline - making it less error prone.
+;;
+;; Installation
+;; ------------
+;;
+;;     git submodule add https://github.com/magnars/mark-multiple.el.git site-lisp/mark-multiple
+;;
+;; Then add the modules you want to your init-file:
+;;
+;;     (require 'inline-string-rectangle)
+;;     (global-set-key (kbd "C-x r t") 'inline-string-rectangle)
+;;
+;;     (require 'mark-more-like-this)
+;;     (global-set-key (kbd "") 'mark-previous-like-this)
+;;     (global-set-key (kbd "") 'mark-next-like-this)
+;;     (global-set-key (kbd "") 'mark-more-like-this) ; like the other two, but takes an argument (negative is previous)
+;;
+;; I'm sure you'll come up with your own keybindings.
+;;
+;; Ideas for more
+;; --------------
+;; * `rename-html-tag` which updates the matching tag while typing.
+;; * `js-rename-local-var` which renames the variable at point in the local file.
+;;
+;; Bugs and gotchas
+;; ----------------
+;; * Adding a master and mirrors does not remove the active region. This might feel
+;;   strange, but turns out to be practical.
+;;
+;; * The current mark-multiple general library lets you do stupid shit, like adding
+;;   overlapping mirrors. That's only a problem for people who want to write their
+;;   own functions using `mm/create-master` and `mm/add-mirror`.
+;;
+;; * Seems like there is some conflict with undo-tree.el, which sometimes clobbers
+;;   the undo history. I might be doing something particularly stupid. Looking into it.
+;;
+;; A wild idea
+;; -----------
+;;
+;; Is this a subset of a crazy multiple-point module? How would that even work?
+;;
+;; There is one use for it I can see, which is editing the end of lines. Set up one
+;; cursor at the end of each line, then just edit normally. The command is repeated
+;; for each position.
+;;
+;; Might be too far out there. I still want to do edit-end-of-lines tho.
+;;
+
+;;; Code:
 
 (defvar mm/master nil
   "The master overlay has the point. Moving point out of master clears all.")
@@ -14,15 +96,21 @@
 (define-key mm/keymap (kbd "C-g") 'mm/clear-all)
 (define-key mm/keymap (kbd "<return>") 'mm/clear-all)
 
-(defface mm/mark-face
+(defface mm/master-face
   '((((class color) (background light)) (:background "DarkSeaGreen1"))
     (t (:background "DimGrey")))
-  "The face used to highlight the marks"
+  "The face used to highlight master"
+  :group 'mark-multiple)
+
+(defface mm/mirror-face
+  '((((class color) (background light)) (:background "DarkSeaGreen1"))
+    (t (:background "DimGrey")))
+  "The face used to highlight mirror"
   :group 'mark-multiple)
 
 (defun mm/create-master (start end)
-  "Start a new multiple mark selection by defining the master region.
-Point must be within the region defined by START and END."
+  "Start a new multiple mark selection by defining the master region from START to END.
+Point must be within the region."
   (if (or (< (point) start)
           (> (point) end))
       (error "Point must be inside master region"))
@@ -30,7 +118,7 @@ Point must be within the region defined by START and END."
   (setq mm/master
         (make-overlay start end nil nil t))
   (overlay-put mm/master 'priority 100)
-  (overlay-put mm/master 'face 'mm/mark-face)
+  (overlay-put mm/master 'face 'mm/master-face)
   (overlay-put mm/master 'keymap mm/keymap)
   (overlay-put mm/master 'modification-hooks '(mm/on-master-modification))
   (overlay-put mm/master 'insert-in-front-hooks '(mm/on-master-modification))
@@ -39,13 +127,13 @@ Point must be within the region defined by START and END."
   (add-hook 'post-command-hook 'mm/post-command-handler nil t))
 
 (defun mm/add-mirror (start end)
-  "Add a region that should mirror the current master."
+  "Add a region START to END that will mirror the current master."
   (if (null mm/master)
       (error "No master defined to mirror. Start with mm/create-master."))
   (let ((mirror (make-overlay start end nil nil t)))
     (setq mm/mirrors (cons mirror mm/mirrors))
     (overlay-put mirror 'priority 100)
-    (overlay-put mirror 'face 'mm/mark-face)))
+    (overlay-put mirror 'face 'mm/mirror-face)))
 
 (defun mm/clear-all ()
   "Remove all marks"
@@ -93,7 +181,7 @@ Point must be within the region defined by START and END."
       (mm/replace-mirror-substring mirror (mm/master-substring)))))
 
 (defun mm/replace-mirror-substring (mirror substring)
-  "Replace the contents of mirror"
+  "Replace the contents of MIRROR with SUBSTRING"
   (goto-char (overlay-start mirror))
   (delete-char (- (overlay-end mirror) (overlay-start mirror)))
   (insert substring))
@@ -101,7 +189,7 @@ Point must be within the region defined by START and END."
 ;; Define some utility functions for users of mark-multiple:
 
 (defun mm/create-master-or-mirror (start end)
-  "Create master if there is none, otherwise add mirror."
+  "Create master from START to END if there is none, otherwise add mirror."
   (if (null mm/master)
       (mm/create-master start end)
     (mm/add-mirror start end)))
@@ -123,3 +211,5 @@ Point must be within the region defined by START and END."
     end))
 
 (provide 'mark-multiple)
+
+;;; mark-multiple.el ends here

@@ -24,11 +24,19 @@
 ;; active region and make them mirrors. The mirrors are updated inline as you type.
 ;;
 ;;     (require 'mark-more-like-this)
-;;     (global-set-key (kbd "") 'mark-previous-like-this)
-;;     (global-set-key (kbd "") 'mark-next-like-this)
-;;     (global-set-key (kbd "") 'mark-more-like-this) ; like the other two, but takes an argument (negative is previous)
+;;     (global-set-key (kbd "C-<") 'mark-previous-like-this)
+;;     (global-set-key (kbd "C->") 'mark-next-like-this)
+;;     (global-set-key (kbd "C-M-m") 'mark-more-like-this)
 ;;
-;; I'm sure you'll come up with your own keybindings.
+;; You should feel free to make your own keybindings.
+;;
+;; 'mark-more-like-this marks the ARG next matches (previous if negative)
+;;
+;; 'mark-next-like-this marks the next occurance.
+;;     - with a negative ARG, removes the last occurance.
+;;     - with a zero ARG, skips the last occurance and marks the next.
+;;
+;; 'mark-previous-like-this works like -next- but in the other direction.
 ;;
 ;; This extension is dependent on the mark-multiple library.
 ;;     https://github.com/magnars/mark-multiple.el
@@ -37,33 +45,51 @@
 
 (require 'mark-multiple)
 
-(defun mark-next-like-this (start end)
-  "Find and mark the next part of the buffer matching the currently active region"
-  (interactive "r")
+(defun mark-next-like-this (arg)
+  "Find and mark the next part of the buffer matching the currently active region
+With negative ARG, delete the last one instead.
+With zero ARG, skip the last one and mark next."
+  (interactive "p")
   (if (not (region-active-p))
       (error "Mark a region to match first."))
-  (let ((length (- end start)))
-    (if (null mm/master)
-        (mm/create-master start end))
-    (save-excursion
-      (goto-char (mm/last-overlay-end))
-      (let ((case-fold-search nil))
-        (search-forward (mm/master-substring)))
-      (mm/add-mirror (- (point) length) (point)))))
+  (if (< arg 0)
+      (mm/remove-mirror (mm/furthest-mirror-after-master)))
+  (if (>= arg 0)
+      (let* ((start (region-beginning))
+             (end (region-end))
+             (length (- end start)))
+        (if (null mm/master)
+            (mm/create-master start end))
+        (save-excursion
+          (goto-char (mm/last-overlay-end))
+          (if (= arg 0)
+              (mm/remove-mirror (mm/furthest-mirror-after-master)))
+          (let ((case-fold-search nil))
+            (search-forward (mm/master-substring)))
+          (mm/add-mirror (- (point) length) (point))))))
 
-(defun mark-previous-like-this (start end)
-  "Find and mark the previous part of the buffer matching the currently active region"
-  (interactive "r")
+(defun mark-previous-like-this (arg)
+  "Find and mark the previous part of the buffer matching the currently active region
+With negative ARG, delete the last one instead.
+With zero ARG, skip the last one and mark previous."
+  (interactive "p")
   (if (not (region-active-p))
       (error "Mark a region to match first."))
-  (let ((length (- end start)))
-    (if (null mm/master)
-        (mm/create-master start end))
-    (save-excursion
-      (goto-char (mm/first-overlay-start))
-      (let ((case-fold-search nil))
-        (search-backward (mm/master-substring)))
-      (mm/add-mirror (point) (+ (point) length)))))
+  (if (< arg 0)
+      (mm/remove-mirror (mm/furthest-mirror-before-master)))
+  (if (>= arg 0)
+      (let* ((start (region-beginning))
+             (end (region-end))
+             (length (- end start)))
+        (if (null mm/master)
+            (mm/create-master start end))
+        (save-excursion
+          (goto-char (mm/first-overlay-start))
+          (if (= arg 0)
+              (mm/remove-mirror (mm/furthest-mirror-before-master)))
+          (let ((case-fold-search nil))
+            (search-backward (mm/master-substring)))
+          (mm/add-mirror (point) (+ (point) length))))))
 
 (defun mark-more-like-this (arg)
   "Marks next part of buffer that matches the currently active region ARG times.
@@ -74,8 +100,8 @@ Given a negative ARG it searches backwards instead."
   (let ((start (region-beginning))
         (end (region-end)))
     (if (> arg 0)
-        (dotimes (i arg) (mark-next-like-this start end))
-      (dotimes (i (- arg)) (mark-previous-like-this start end)))))
+        (dotimes (i arg) (mark-next-like-this 1))
+      (dotimes (i (- arg)) (mark-previous-like-this 1)))))
 
 (provide 'mark-more-like-this)
 

@@ -197,6 +197,35 @@ Point must be within the region."
       (mm/create-master start end)
     (mm/add-mirror start end)))
 
+(defun mm/remove-mirror (mirror)
+  "Removes all traces of MIRROR"
+  (setq mm/mirrors (remove mirror mm/mirrors))
+  (delete-overlay mirror))
+
+(defun mm/furthest-mirror-before-master ()
+  "Find the mirror with the lowest start position before master"
+  (if (null mm/mirrors)
+      (error "No mirrors to be found, sir."))
+  (let ((first nil)
+        (start (mm/master-start)))
+    (dolist (mirror mm/mirrors)
+      (when (< (overlay-start mirror) start)
+        (setq first mirror)
+        (setq start (overlay-start mirror))))
+    first))
+
+(defun mm/furthest-mirror-after-master ()
+  "Find the mirror with the highest end position after master"
+  (if (null mm/mirrors)
+      (error "No mirrors to be found, sir."))
+  (let ((last nil)
+        (end (mm/master-end)))
+    (dolist (mirror mm/mirrors)
+      (when (> (overlay-end mirror) end)
+        (setq last mirror)
+        (setq end (overlay-end mirror))))
+    last))
+
 (defun mm/first-overlay-start ()
   "Find first buffer position covered by master and mirrors"
   (let ((start (mm/master-start)))

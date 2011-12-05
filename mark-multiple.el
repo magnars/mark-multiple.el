@@ -97,6 +97,7 @@
 
 (defvar mm/keymap (make-sparse-keymap))
 (define-key mm/keymap (kbd "C-g") 'mm/clear-all)
+(define-key mm/keymap (kbd "C-m") 'mm/clear-all)
 (define-key mm/keymap (kbd "<return>") 'mm/clear-all)
 
 (defface mm/master-face

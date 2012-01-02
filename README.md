@@ -16,6 +16,8 @@ Done
 * `inline-string-rectangle` which works like `string-rectangle` but lets you
   write inline - making it less error prone.
 * `rename-sgml-tag` which updates the matching tag while typing.
+* `js2-rename-var` which renames the variable on point and all occurrences
+  in its lexical scope.
 
 Installation
 ------------
@@ -35,6 +37,9 @@ Then add the modules you want to your init-file:
     (require 'rename-sgml-tag)
     (define-key sgml-mode-map (kbd "C-c C-r") 'rename-sgml-tag)
 
+    (require 'js2-rename-var)
+    (define-key js2-mode-map (kbd "C-c C-r") 'js2-rename-var)
+
 Feel free to come up with your own keybindings.
 
 Ideas for more
@@ -52,6 +57,8 @@ Bugs and gotchas
 
 * Seems like there is some conflict with undo-tree.el, which sometimes clobbers
   the undo history. I might be doing something particularly stupid. Looking into it.
+
+* Reverting the buffer with active marks makes them unremovable.
 
 A wild idea
 -----------

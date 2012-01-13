@@ -70,3 +70,36 @@ cursor at the end of each line, then just edit normally. The command is repeated
 for each position.
 
 Might be too far out there. I still want to do edit-end-of-lines tho.
+
+Contribute
+----------
+
+If you make some nice commands with mark-multiple, it would be
+great if you opened a pull-request. The repo is at:
+
+    https://github.com/magnars/mark-multiple.el
+
+Contributors
+------------
+
+* [Pao-Chin Wu](https://github.com/abaw) fixed `mark-next-like-this` if no region is active.
+
+Thanks!
+
+License
+-------
+
+Copyright (C) 2011 Magnar Sveen
+
+Author: Magnar Sveen <magnars@gmail.com>
+Keywords: marking library
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.

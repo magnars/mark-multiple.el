@@ -42,10 +42,6 @@ Then add the modules you want to your init-file:
 
 Feel free to come up with your own keybindings.
 
-Ideas for more
---------------
-* `js-rename-local-var` which renames the variable at point in the local file.
-
 Bugs and gotchas
 ----------------
 * Adding a master and mirrors does not remove the active region. This might feel
@@ -58,7 +54,7 @@ Bugs and gotchas
 * Seems like there is some conflict with undo-tree.el, which sometimes clobbers
   the undo history. I might be doing something particularly stupid. Looking into it.
 
-* Reverting the buffer with active marks makes them unremovable.
+* Reverting a buffer with active marks makes them unremovable.
 
 A wild idea
 -----------

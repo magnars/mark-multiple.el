@@ -103,7 +103,7 @@
 (make-variable-buffer-local 'mm/mirrors)
 
 (defvar mm/keymap (make-sparse-keymap))
-(define-key mm/keymap (kbd "C-g") 'mm/clear-all)
+(define-key mm/keymap (kbd "C-g") 'mm/deactivate-region-or-clear-all)
 (define-key mm/keymap (kbd "C-m") 'mm/clear-all)
 (define-key mm/keymap (kbd "<return>") 'mm/clear-all)
 
@@ -145,6 +145,13 @@ Point must be within the region."
     (setq mm/mirrors (cons mirror mm/mirrors))
     (overlay-put mirror 'priority 100)
     (overlay-put mirror 'face 'mm/mirror-face)))
+
+(defun mm/deactivate-region-or-clear-all ()
+  "Deactivate mark if active, otherwise clear all."
+  (interactive)
+  (if (use-region-p)
+      (deactivate-mark)
+    (mm/clear-all)))
 
 (defun mm/clear-all ()
   "Remove all marks"

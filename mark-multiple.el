@@ -27,6 +27,10 @@
 ;; awesome functionality. Or at least, some more visually pleasing insert and
 ;; replace operations.
 ;;
+;; Video
+;; -----
+;; You can [watch an intro to mark-multiple at Emacs Rocks](http://emacsrocks.com/e08.html).
+;;
 ;; Done
 ;; ----
 ;; * A general library for managing master and mirrors

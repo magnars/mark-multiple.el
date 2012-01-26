@@ -60,9 +60,6 @@
 ;;     (require 'rename-sgml-tag)
 ;;     (define-key sgml-mode-map (kbd "C-c C-r") 'rename-sgml-tag)
 ;;
-;;     (require 'js2-rename-var)
-;;     (define-key js2-mode-map (kbd "C-c C-r") 'js2-rename-var)
-;;
 ;; Feel free to come up with your own keybindings.
 ;;
 ;; Ideas for more

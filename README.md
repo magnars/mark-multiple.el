@@ -20,8 +20,6 @@ Done
 * `inline-string-rectangle` which works like `string-rectangle` but lets you
   write inline - making it less error prone.
 * `rename-sgml-tag` which updates the matching tag while typing.
-* `js2-rename-var` which renames the variable on point and all occurrences
-  in its lexical scope.
 
 Installation
 ------------

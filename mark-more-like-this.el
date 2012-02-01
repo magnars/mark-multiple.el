@@ -64,9 +64,12 @@ With zero ARG, skip the last one and mark next."
           (goto-char (mm/last-overlay-end))
           (if (= arg 0)
               (mm/remove-mirror (mm/furthest-mirror-after-master)))
-          (let ((case-fold-search nil))
-            (search-forward (mm/master-substring)))
-          (mm/add-mirror (- (point) (length (mm/master-substring))) (point))))))
+          (let ((case-fold-search nil)
+                (master-str (mm/master-substring)))
+            (if (search-forward master-str nil t)
+                (mm/add-mirror (- (point) (length master-str)) (point))
+              (error "no more found \"%s\" forward"
+                     (substring-no-properties master-str))))))))
 
 (defun mark-previous-like-this (arg)
   "Find and mark the previous part of the buffer matching the currently active region
@@ -87,9 +90,12 @@ With zero ARG, skip the last one and mark previous."
           (goto-char (mm/first-overlay-start))
           (if (= arg 0)
               (mm/remove-mirror (mm/furthest-mirror-before-master)))
-          (let ((case-fold-search nil))
-            (search-backward (mm/master-substring)))
-          (mm/add-mirror (point) (+ (point) (length (mm/master-substring))))))))
+          (let ((case-fold-search nil)
+                (master-str (mm/master-substring)))
+            (if (search-backward master-str nil t)
+                (mm/add-mirror (point) (+ (point) (length master-str)))
+              (error "no more found \"%s\" backward"
+                     (substring-no-properties master-str))))))))
 
 (defun mark-more-like-this (arg)
   "Marks next part of buffer that matches the currently active region ARG times.

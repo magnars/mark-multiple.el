@@ -51,16 +51,16 @@ With negative ARG, delete the last one instead.
 With zero ARG, skip the last one and mark next."
   (interactive "p")
   (unless (or (region-active-p)
-	      mm/master)
+              mm/master)
     (error "Mark a region to match first."))
   (if (< arg 0)
       (mm/remove-mirror (mm/furthest-mirror-after-master)))
   (if (>= arg 0)
       (progn
-	(when (null mm/master)
-	  (mm/create-master (region-beginning) (region-end)))
+        (when (null mm/master)
+          (mm/create-master (region-beginning) (region-end)))
 
-	(save-excursion
+        (save-excursion
           (goto-char (mm/last-overlay-end))
           (if (= arg 0)
               (mm/remove-mirror (mm/furthest-mirror-after-master)))
@@ -77,16 +77,16 @@ With negative ARG, delete the last one instead.
 With zero ARG, skip the last one and mark previous."
   (interactive "p")
   (unless (or (region-active-p)
-	      mm/master)
+              mm/master)
     (error "Mark a region to match first."))
   (if (< arg 0)
       (mm/remove-mirror (mm/furthest-mirror-before-master)))
   (if (>= arg 0)
       (progn
-	(when (null mm/master)
-	  (mm/create-master (region-beginning) (region-end)))
+        (when (null mm/master)
+          (mm/create-master (region-beginning) (region-end)))
 
-	(save-excursion
+        (save-excursion
           (goto-char (mm/first-overlay-start))
           (if (= arg 0)
               (mm/remove-mirror (mm/furthest-mirror-before-master)))
@@ -149,7 +149,8 @@ is one of the above."
               (t
                (setq cmd nil))))
       (when cmd
-        (funcall cmd arg)
+        (ignore-errors
+          (funcall cmd arg))
         (setq first nil last cmd)
         (setq ev (read-event "Use arrow keys for more marks: "))))
     (push ev unread-command-events)))

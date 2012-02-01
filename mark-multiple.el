@@ -105,8 +105,8 @@
 
 (defvar mm/keymap (make-sparse-keymap))
 (define-key mm/keymap (kbd "C-g") 'mm/deactivate-region-or-clear-all)
-(define-key mm/keymap (kbd "C-m") 'mm/clear-all)
-(define-key mm/keymap (kbd "<return>") 'mm/clear-all)
+(define-key mm/keymap (kbd "C-m") 'mm/deactivate-region-and-clear-all)
+(define-key mm/keymap (kbd "<return>") 'mm/deactivate-region-and-clear-all)
 
 (defface mm/master-face
   '((((class color) (background light)) (:background "DarkSeaGreen1"))
@@ -153,6 +153,12 @@ Point must be within the region."
   (if (use-region-p)
       (deactivate-mark)
     (mm/clear-all)))
+
+(defun mm/deactivate-region-and-clear-all ()
+  "Deactivate mark and clear all."
+  (interactive)
+  (deactivate-mark)
+  (mm/clear-all))
 
 (defun mm/clear-all ()
   "Remove all marks"

@@ -96,11 +96,57 @@ With zero ARG, skip the last one and mark previous."
 Given a negative ARG it searches backwards instead."
   (interactive "p")
   (unless (or (region-active-p)
-	      mm/master)
+              mm/master)
     (error "Mark a region to match first."))
   (if (> arg 0)
       (dotimes (i arg) (mark-next-like-this 1))
     (dotimes (i (- arg)) (mark-previous-like-this 1))))
+
+(defun mark-more-like-this-extended ()
+  "Like mark-more-like-this, but then lets you adjust with arrows key.
+The actual adjustment made depends on the final component of the
+key-binding used to invoke the command, with all modifiers removed:
+
+   <up>    Mark previous like this
+   <down>  Mark next like this
+   <left>  If last was previous, skip it
+           If last was next, remove it
+   <right> If last was next, skip it
+           If last was previous, remove it
+
+Then, continue to read input events and further add or move marks
+as long as the input event read (with all modifiers removed)
+is one of the above."
+  (interactive)
+  (let ((first t)
+        (ev last-command-event)
+        (cmd 'mark-next-like-this)
+        (arg 1)
+        last echo-keystrokes)
+    (while cmd
+      (let ((base (event-basic-type ev)))
+        (message "base is %S" base)
+        (cond ((eq base 'left)
+               (if (eq last 'mark-previous-like-this)
+                   (setq cmd last arg 0)
+                 (setq cmd 'mark-next-like-this arg -1)))
+              ((or (eq base 'up) (eq base ?å))
+               (setq cmd 'mark-previous-like-this arg 1))
+              ((eq base 'right)
+               (if (eq last 'mark-next-like-this)
+                   (setq cmd last arg 0)
+                 (setq cmd 'mark-previous-like-this arg -1)))
+              ((or (eq base 'down) (eq base ?æ))
+               (setq cmd 'mark-next-like-this arg 1))
+              (first
+               (setq cmd 'mark-next-like-this arg 1))
+              (t
+               (setq cmd nil))))
+      (when cmd
+        (funcall cmd arg)
+        (setq first nil last cmd)
+        (setq ev (read-event "Use arrow keys for more marks: "))))
+    (push ev unread-command-events)))
 
 (provide 'mark-more-like-this)
 

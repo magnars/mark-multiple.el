@@ -21,6 +21,8 @@ Done
   write inline - making it less error prone.
 * `rename-sgml-tag` which updates the matching tag while typing.
 
+Note: `js2-rename-var` has been moved to [js2-refactor.el](https://github.com/magnars/js2-refactor.el). 
+
 Installation
 ------------
 

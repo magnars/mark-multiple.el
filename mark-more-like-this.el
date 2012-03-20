@@ -100,14 +100,21 @@ With zero ARG, skip the last one and mark previous."
 (defun mark-all-like-this ()
   "Find and mark all the parts of the buffer matching the currently active region"
   (interactive)
-  (unless (region-active-p) (error "Mark a region to match first."))
-  (mm/create-master (region-beginning) (region-end))
+  (unless (or (region-active-p) mm/master) (error "Mark a region to match first."))
+  (if (not mm/master)
+      (mm/create-master (region-beginning) (region-end)))
+  (dolist (mirror mm/mirrors)
+    (delete-overlay mirror))
+  (setq mm/mirrors ())
   (save-excursion
     (goto-char 0)
     (let ((case-fold-search nil)
           (master-str (mm/master-substring)))
       (while (search-forward master-str nil t)
-        (mm/add-mirror (- (point) (length master-str)) (point))))))
+        (let ((start (- (point) (length master-str)))
+              (end (point)))
+          (if (/= (overlay-start mm/master) start)
+              (mm/add-mirror start end)))))))
 
 (defun mark-more-like-this (arg)
   "Marks next part of buffer that matches the currently active region ARG times.

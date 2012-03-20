@@ -97,6 +97,25 @@ With zero ARG, skip the last one and mark previous."
               (error "no more found \"%s\" backward"
                      (substring-no-properties master-str))))))))
 
+(defun mark-all-like-this ()
+  "Find and mark all the parts of the buffer matching the currently active region"
+  (interactive)
+  (unless (or (region-active-p) mm/master) (error "Mark a region to match first."))
+  (if (not mm/master)
+      (mm/create-master (region-beginning) (region-end)))
+  (dolist (mirror mm/mirrors)
+    (delete-overlay mirror))
+  (setq mm/mirrors ())
+  (save-excursion
+    (goto-char 0)
+    (let ((case-fold-search nil)
+          (master-str (mm/master-substring)))
+      (while (search-forward master-str nil t)
+        (let ((start (- (point) (length master-str)))
+              (end (point)))
+          (if (/= (overlay-start mm/master) start)
+              (mm/add-mirror start end)))))))
+
 (defun mark-more-like-this (arg)
   "Marks next part of buffer that matches the currently active region ARG times.
 Given a negative ARG it searches backwards instead."
@@ -131,7 +150,6 @@ is one of the above."
         last echo-keystrokes)
     (while cmd
       (let ((base (event-basic-type ev)))
-        (message "base is %S" base)
         (cond ((eq base 'left)
                (if (eq last 'mark-previous-like-this)
                    (setq cmd last arg 0)

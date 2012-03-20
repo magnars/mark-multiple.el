@@ -109,17 +109,6 @@ With zero ARG, skip the last one and mark previous."
       (while (search-forward master-str nil t)
         (mm/add-mirror (- (point) (length master-str)) (point))))))
 
-;; (defun mark-all-like-this-in-region (reg-start reg-end)
-;;   "Find and mark all the parts in the region matching the given search"
-;;   (interactive "r")
-;;   (let ((search (read-from-minibuffer "Mark all in region: "))
-;;         (case-fold-search nil))
-;;     (deactivate-mark)
-;;     (save-excursion
-;;       (goto-char reg-start)
-;;       (while (search-forward search reg-end t)
-;;         (mm/create-master-or-mirror (- (point) (length search)) (point))))))
-
 (defun mark-more-like-this (arg)
   "Marks next part of buffer that matches the currently active region ARG times.
 Given a negative ARG it searches backwards instead."

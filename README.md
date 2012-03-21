@@ -85,7 +85,7 @@ Contributors
 
 * [Pao-Chin Wu](https://github.com/abaw) fixed `mark-next-like-this` if no region is active.
 * [Syohei YOSHIDA](https://github.com/syohex) improved the error messages for `mark-next-like-this`
-* [Mounier Florian](https://github.com/paradoxxxzero) added `mark-all-like-this`
+* [Mounier Florian](https://github.com/paradoxxxzero) added `mark-all-like-this` and `mark-all-like-this-in-region`
 
 Thanks!
 

@@ -136,7 +136,9 @@ Point must be within the region."
   (overlay-put mm/master 'insert-in-front-hooks '(mm/on-master-modification))
   (overlay-put mm/master 'insert-behind-hooks '(mm/on-master-modification))
   (setq mm/mirrors ())
-  (add-hook 'post-command-hook 'mm/post-command-handler nil t))
+  (add-hook 'post-command-hook 'mm/post-command-handler nil t)
+  (run-hooks 'mark-multiple-enabled-hook))
+
 
 (defun mm/add-mirror (start end)
   "Add a region START to END that will mirror the current master."
@@ -169,7 +171,8 @@ Point must be within the region."
       (delete-overlay mirror))
     (setq mm/master nil)
     (setq mm/mirrors ())
-    (remove-hook 'post-command-hook 'mm/post-command-handler)))
+    (remove-hook 'post-command-hook 'mm/post-command-handler)
+    (run-hooks 'mark-multiple-disabled-hook)))
 
 (defun mm/master-start ()
   (overlay-start mm/master))

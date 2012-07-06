@@ -267,6 +267,7 @@ Point must be within the region."
           (setq end (overlay-end mirror))))
     end))
 
-(provide 'mark-multiple)
+(eval-after-load "pabbrev" '(require 'mm-pabbrev-integration))
 
+(provide 'mark-multiple)
 ;;; mark-multiple.el ends here

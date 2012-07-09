@@ -45,6 +45,7 @@
 
 (require 'mark-multiple)
 
+;;;###autoload
 (defun mark-next-like-this (arg)
   "Find and mark the next part of the buffer matching the currently active region
 With negative ARG, delete the last one instead.
@@ -71,6 +72,7 @@ With zero ARG, skip the last one and mark next."
               (error "no more found \"%s\" forward"
                      (substring-no-properties master-str))))))))
 
+;;;###autoload
 (defun mark-previous-like-this (arg)
   "Find and mark the previous part of the buffer matching the currently active region
 With negative ARG, delete the last one instead.
@@ -97,6 +99,7 @@ With zero ARG, skip the last one and mark previous."
               (error "no more found \"%s\" backward"
                      (substring-no-properties master-str))))))))
 
+;;;###autoload
 (defun mark-all-like-this ()
   "Find and mark all the parts of the buffer matching the currently active region"
   (interactive)
@@ -116,6 +119,7 @@ With zero ARG, skip the last one and mark previous."
           (if (/= (overlay-start mm/master) start)
               (mm/add-mirror start end)))))))
 
+;;;###autoload
 (defun mark-all-like-this-in-region (reg-start reg-end)
   "Find and mark all the parts in the region matching the given search"
   (interactive "r")
@@ -130,6 +134,7 @@ With zero ARG, skip the last one and mark previous."
       (error "Search failed for %S" search))
     (goto-char (mm/master-start))))
 
+;;;###autoload
 (defun mark-more-like-this (arg)
   "Marks next part of buffer that matches the currently active region ARG times.
 Given a negative ARG it searches backwards instead."
@@ -141,6 +146,7 @@ Given a negative ARG it searches backwards instead."
       (dotimes (i arg) (mark-next-like-this 1))
     (dotimes (i (- arg)) (mark-previous-like-this 1))))
 
+;;;###autoload
 (defun mark-more-like-this-extended ()
   "Like mark-more-like-this, but then lets you adjust with arrows key.
 The actual adjustment made depends on the final component of the

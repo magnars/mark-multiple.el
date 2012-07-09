@@ -36,6 +36,7 @@
 
 (require 'mark-multiple)
 
+;;;###autoload
 (defun inline-string-rectangle ()
   (interactive)
   (mm/clear-all)

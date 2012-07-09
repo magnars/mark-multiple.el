@@ -36,6 +36,7 @@
   (save-excursion
     (not (null (sgml-get-context)))))
 
+;;;###autoload
 (defun rename-sgml-tag ()
   (interactive)
   (if (not (rst--inside-tag-p))

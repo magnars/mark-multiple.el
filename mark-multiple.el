@@ -149,6 +149,7 @@ Point must be within the region."
     (overlay-put mirror 'priority 100)
     (overlay-put mirror 'face 'mm/mirror-face)))
 
+;;;###autoload
 (defun mm/deactivate-region-or-clear-all ()
   "Deactivate mark if active, otherwise clear all."
   (interactive)
@@ -156,12 +157,14 @@ Point must be within the region."
       (deactivate-mark)
     (mm/clear-all)))
 
+;;;###autoload
 (defun mm/deactivate-region-and-clear-all ()
   "Deactivate mark and clear all."
   (interactive)
   (deactivate-mark)
   (mm/clear-all))
 
+;;;###autoload
 (defun mm/clear-all ()
   "Remove all marks"
   (interactive)

@@ -59,7 +59,12 @@
         (mm/add-mirror (point) (+ (point) num-chars))))
     (move-to-column mark-column)
     (set-mark (point))
-    (move-to-column point-column)))
+    (move-to-column point-column))
+  (when (not delete-selection-mode)
+    (kill-region (region-beginning) (region-end))
+    (save-excursion
+      (dolist (mirror mm/mirrors)
+        (mm/replace-mirror-substring mirror "")))))
 
 (provide 'inline-string-rectangle)
 

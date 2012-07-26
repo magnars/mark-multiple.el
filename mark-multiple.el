@@ -57,8 +57,10 @@
 ;;     (global-set-key (kbd "C->") 'mark-next-like-this)
 ;;     (global-set-key (kbd "C-M-m") 'mark-more-like-this) ; like the other two, but takes an argument (negative is previous)
 ;;
-;;     (require 'rename-sgml-tag)
-;;     (define-key sgml-mode-map (kbd "C-c C-r") 'rename-sgml-tag)
+;;     (add-hook 'sgml-mode-hook
+;;               (lambda ()
+;;                 (require 'rename-sgml-tag)
+;;                 (define-key sgml-mode-map (kbd "C-c C-r") 'rename-sgml-tag)))
 ;;
 ;; Feel free to come up with your own keybindings.
 ;;
@@ -80,16 +82,6 @@
 ;;
 ;; * Reverting the buffer with active marks makes them unremovable.
 ;;
-;; A wild idea
-;; -----------
-;;
-;; Is this a subset of a crazy multiple-point module? How would that even work?
-;;
-;; There is one use for it I can see, which is editing the end of lines. Set up one
-;; cursor at the end of each line, then just edit normally. The command is repeated
-;; for each position.
-;;
-;; Might be too far out there. I still want to do edit-end-of-lines tho.
 ;;
 
 ;;; Code:

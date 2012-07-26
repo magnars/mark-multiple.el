@@ -21,7 +21,7 @@ Done
   write inline - making it less error prone.
 * `rename-sgml-tag` which updates the matching tag while typing.
 
-Note: `js2-rename-var` has been moved to [js2-refactor.el](https://github.com/magnars/js2-refactor.el). 
+Note: `js2-rename-var` has been moved to [js2-refactor.el](https://github.com/magnars/js2-refactor.el).
 
 Installation
 ------------
@@ -39,8 +39,10 @@ Then add the modules you want to your init-file:
     (global-set-key (kbd "C-M-m") 'mark-more-like-this) ; like the other two, but takes an argument (negative is previous)
     (global-set-key (kbd "C-*") 'mark-all-like-this)
 
-    (require 'rename-sgml-tag)
-    (define-key sgml-mode-map (kbd "C-c C-r") 'rename-sgml-tag)
+    (add-hook 'sgml-mode-hook
+              (lambda ()
+                (require 'rename-sgml-tag)
+                (define-key sgml-mode-map (kbd "C-c C-r") 'rename-sgml-tag)))
 
 Feel free to come up with your own keybindings.
 
@@ -61,13 +63,11 @@ Bugs and gotchas
 A wild idea
 -----------
 
-Is this a subset of a crazy multiple-point module? How would that even work?
+Is this a subset of a crazy multiple-point module? Would that even work?
 
-There is one use for it I can see, which is editing the end of lines. Set up one
-cursor at the end of each line, then just edit normally. The command is repeated
-for each position.
-
-Might be too far out there. I still want to do edit-end-of-lines tho.
+**Edit**: Yes, indeed it is. And yes, it does. This module has been pretty much
+eclipsed by [multiple-cursors.el](https://github.com/magnars/multiple-cursors.el), which
+goes quite a bit farther and with a saner implementation to boot.
 
 Contribute
 ----------

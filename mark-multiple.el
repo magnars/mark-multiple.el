@@ -20,6 +20,28 @@
 
 ;;; Commentary:
 
+;; --------------------------------------------------------------------------------
+;; --------------------------------------------------------------------------------
+;; --------------------------------------------------------------------------------
+
+;; # Please note! mark-multiple has been superseded by multiple-cursors
+;; 
+;; It has all the functionality of mark-multiple, but with a more robust implementation
+;; and more features.
+;; 
+;; To get the features from mark-multiple, use:
+;; 
+;;  - `mc/mark-more-like-this` in place of `mark-more-like-this`
+;;  - `set-rectangular-region-anchor` as a more convenient replacement for `inline-string-rectangle`
+;;  - or `mc/edit-lines` for a more familiar replacement for `inline-string-rectangle`
+;;  - `mc/mark-sgml-tag-pair` in place of `rename-sgml-tag`
+;; 
+;; Read more about multiple-cursors on [its own page](https://github.com/magnars/multiple-cursors.el).
+
+;; --------------------------------------------------------------------------------
+;; --------------------------------------------------------------------------------
+;; --------------------------------------------------------------------------------
+
 ;; An emacs extension that sorta lets you mark several regions at once.
 ;;
 ;; More precisely, it allows for one master region, with several mirror
